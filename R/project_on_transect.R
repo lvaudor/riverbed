@@ -9,6 +9,7 @@
 #' @return yt y coordinate corresponding to the distance to the transect (new coordinate y)
 #' @return slopexy slope of transect 
 #' @return interceptxy intercept of transect
+#' @export
 #' @examples
 #' x=c(-73.1,-57.4,-54.6,-32.4,-13.9,  9.9, 46.8, 59.3, 91.8, 47.3)
 #' y=c(-73.8,-57.6,-23.5,-20.6,-22.1,-41.9,-49.7,-26.3,-5.75,-34.1)

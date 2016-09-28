@@ -12,6 +12,7 @@
 #' @param plotstyle style of plot for both profiles. Can be set to "p" (points), "l" (only lines) or "b" (both). Defaults to "b".
 #' @param upz individual standard imprecision on z 
 #' @return uncertainty in the estimate of area
+#' @export
 #' @examples
 #' l1=c(1,3,5,6,9)
 #' z1=c(1,2,3,2.5,5)
@@ -88,9 +89,10 @@ area_between=function(l1,
   total_area=sum(a,na.rm=TRUE)
   #
   if(plot==TRUE){
-        plot(dat$l1,dat$z1, col="white", 
-             ylim=c(min(c(dat$z1,dat$z2),na.rm=T),max(c(dat$z1,dat$z2),na.rm=T)),
-             main=total_area)
+        l=dat$l1
+        z=dat$z1
+        plot(x=l,y=z, col="white", 
+             ylim=c(min(c(dat$z1,dat$z2),na.rm=T),max(c(dat$z1,dat$z2),na.rm=T)),...)
         points(dat$l2,dat$z2, col="white")
         datc=dat[which(!is.na(dat$z1)&!is.na(dat$z2)),]
         ind=1:nrow(datc)
