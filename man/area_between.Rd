@@ -5,7 +5,7 @@
 \title{A function to calculate area between two profiles}
 \usage{
 area_between(l1, z1, l2, z2, h = NA, type = "both", plot = FALSE,
-  col = "yellow", plotstyle = "b", upz = NA)
+  col = c("pink", "light blue"), plotstyle = "b", upz = NA, ...)
 }
 \arguments{
 \item{l1}{x coordinate of first profile}
