@@ -1,8 +1,8 @@
 Package: riverbed
-Title: What the Package Does (one line, title case)
+Title: This package is intended to facilitate the calculation of surfaces and volumes described with topological profiles (such as river long profiles or river transects).
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Authors@R: person("Lise", "Vaudor", email = "lise.vaudor@ens-lyon.fr", role = c("aut", "cre"))
+Description: This package is intended to facilitate the calculation of surfaces and volumes described with profiles (such as river long profiles or river transects).
 Depends:
     R (>= 3.2.2)
 License: What license is it under?
