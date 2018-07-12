@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
 ```
 
-```{r}
+```{r data_create}
 library(riverbed)
 s1 <- tibble(l=c(1.1,3.4,5.0,5.3,6.2,4.3,2.5,6.7,6.9,9.2),
              z=c(1.4,3.1,5.5,4.8,1.3,2.5,4.3,2.2,3.1,2.6))
@@ -19,7 +19,7 @@ s2 <- tibble(l=c(0.5,2.5,4.0,6.0,4.4,5.8,9.5,7.2),
 
 We consider two longitudinal series $s_1=(l_1,z_1)$, and $s_2=(l_2,z_2)$:
 
-```{r, echo=FALSE, fig.width=5, fig.height=3}
+```{r plot_series, echo=FALSE, fig.width=5, fig.height=3}
 result_area <- area_between(s1,s2)
 
 ggplot(filter(result_area$data, !is.na(series)),
@@ -30,7 +30,7 @@ ggplot(filter(result_area$data, !is.na(series)),
 
 To calculate the area between the curves we need to interpolate the data and calculate intersects between the two curves:
 
-```{r, echo=FALSE, fig.width=5, fig.height=3}
+```{r plot_points_types, echo=FALSE, fig.width=5, fig.height=3}
 ggplot(result_area$data,
        aes(x=l_obs,y=z_obs,color=series)) +
   geom_line()+
@@ -50,7 +50,7 @@ ggplot(result_area$data,
 
 This, as well as the calculation of corresponding trapezia, is realised by the function `area_between()`.
 
-```{r}
+```{r result_area}
 result_area <- area_between(s1,s2)
 result_area
 ```
@@ -63,19 +63,19 @@ The output of the function corresponds to
 
 Note that it is also possible to calculate the area between one longitudinal series $s_1=(l_1,z_1)$ and a constant horizontal value $h$.
 
-```{r}
+```{r result_area_h}
 result_area_h <- area_between(s1,h=2)
 ```
 
 ## Plot of area
 
-```{r, fig.width=5, fig.height=3}
+```{r plot_area, fig.width=5, fig.height=3}
 plot_area(result_area)
 ```
 
 If the distinction between upper and lower area is irrelevant then it is possible **not to distinguish these two types** on the plot:
 
-```{r, fig.width=5, fig.height=3}
+```{r plot_area_not_distinguished, fig.width=5, fig.height=3}
 plot_area(result_area,distinguish_type=FALSE)
 ```
 
@@ -125,7 +125,7 @@ Here, for instance,
 
 We can check the calculation of error through a simple simulation with 1000 series $s_{1tmp}$ and $s_{2tmp}$ varying around $s_1$ and $s_2$ respectively, with variations corresponding to estimation errors $\sigma_z$ and $\sigma_l$:
 
-```{r, cache=TRUE}
+```{r simulate}
 set.seed(33)
 sigma_z=c(0.1,0.3)
 sigma_l=c(0.05,0.2)
