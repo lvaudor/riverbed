@@ -4,42 +4,37 @@
 \alias{area_between}
 \title{A function to calculate area between two profiles}
 \usage{
-area_between(l1, z1, l2, z2, h = NA, type = "both", plot = FALSE,
-  col = c("pink", "light blue"), plotstyle = "b", upz = NA, ...)
+area_between(s1, s2 = NA, h = NA, sigma_z = c(NA, NA), sigma_l = c(NA,
+  NA))
 }
 \arguments{
-\item{l1}{x coordinate of first profile}
+\item{s1}{tibble with columns l and z describing first profile}
 
-\item{z1}{z coordinate of first profile}
-
-\item{l2}{x coordinate of second profile}
-
-\item{z2}{z coordinate of second profile}
+\item{s2}{tibble with columns l and z describing second profile}
 
 \item{h}{if provided by user, the second profile is supposed to be horizontal, with constant height=h (defaults to NA)}
 
-\item{plot}{if TRUE the two profiles are plotted. Defaults to FALSE.}
+\item{sigma_z}{a vector of length 1 or 2 providing an estimate of the error in measures of height z1 and z2}
 
-\item{col}{color with which the area between profiles is plotted (if plot=TRUE). Defaults to "yellow"}
-
-\item{plotstyle}{style of plot for both profiles. Can be set to "p" (points), "l" (only lines) or "b" (both). Defaults to "b".}
-
-\item{upz}{individual standard imprecision on z}
-
-\item{precision}{precision with which the area is calculated (see Details section)}
+\item{sigma_l}{a vector of length 1 or 2 providing an estimate of the error in measures of longitudinal coordinates l1 and l2z1 and z2}
 }
 \value{
-uncertainty in the estimate of area
+area
+
+area_by_type
+
+sigma_area
+
+data
 }
 \description{
 This function takes two profiles defined as (l1,z1) and (l2,z2) as inputs and calculates area between them
 }
 \examples{
-l1=c(1,3,5,6,9)
-z1=c(1,2,3,2.5,5)
-l2=c(0.5,2.5,4,6,8)
-z2=c(3,1,2,4,3)
-area_between(l1,z1,l2,z2, plot=TRUE)
-area_between(l1,z1,h=2, plot=TRUE, type="upper",plotstyle="l")
+s1 <- tibble(l=c(1,3,5,6,9),
+             z=c(1,2,3,2.5,5))
+s2 <- tibble(l=c(0.5,2.5,4,6,8),
+             z=c(3,1,2,4,3))
+area_between(s1,s2)
+area_between(s1,h=2)
 }
-

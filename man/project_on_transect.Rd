@@ -37,4 +37,3 @@ plot(x,y,col=mycol,
 abline(b=res$slopexy,a=res$interceptxy, col="red")
 points(res$x,res$y, col="red")
 }
-
