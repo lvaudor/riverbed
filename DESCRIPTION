@@ -1,11 +1,11 @@
 Package: riverbed
-Title: This package is intended to facilitate the calculation of surfaces and volumes described with topological profiles (such as river long profiles or river transects).
+Title: Surfaces and volumes based on profiles.
 Version: 0.0.0.9000
 Authors@R: person("Lise", "Vaudor", email = "lise.vaudor@ens-lyon.fr", role = c("aut", "cre"))
 Description: This package is intended to facilitate the calculation of surfaces and volumes described with profiles (such as river long profiles or river transects).
 Depends:
     R (>= 3.2.2), dplyr, ggplot2
-License: What license is it under?
+License: GPL2
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1

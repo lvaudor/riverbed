@@ -19,7 +19,7 @@ cross_series=function(s1,
                       s2,
                       h=NA){
   if(!is.na(h)){
-    s2=tibble(l=range(s1$l,na.omit=T),
+    s2=tibble(l=range(s1$l,na.rm=T),
               z=rep(h,2))
   }
   s1 <- arrange(s1,l)
