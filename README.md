@@ -8,5 +8,12 @@ For now there is no stable version of this package on CRAN. If you want to insta
 
 ```{r}
 if(!require(devtools)){install.packages("devtools")}
-devtools::install_github("lvaudor/riverbed")
+devtools::install_github("lvaudor/riverbed",build_vignette=TRUE)
+```
+
+## Guidelines
+
+To have a general overview of the use of this package please see vignette:
+```{r}
+vignette("riverbed")
 ```
