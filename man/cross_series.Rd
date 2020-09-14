@@ -2,7 +2,7 @@
 % Please edit documentation in R/cross_series.R
 \name{cross_series}
 \alias{cross_series}
-\title{A function to calculate area between two profiles}
+\title{This function crosses two (l,z) series and provides a tibble regarding all points of interest (observations, intersections, interpolations)}
 \usage{
 cross_series(s1, s2, h = NA)
 }
@@ -14,14 +14,10 @@ cross_series(s1, s2, h = NA)
 \item{h}{if provided by user, the second profile is supposed to be horizontal, with constant height=h (defaults to NA)}
 }
 \value{
-area
-
-area_by_type
-
-data
+a tibble providing info on all points of interest in the crossing of the two series.
 }
 \description{
-This function takes two profiles defined as (l1,z1) and (l2,z2) as inputs and calculates area between them
+This function crosses two (l,z) series and provides a tibble regarding all points of interest (observations, intersections, interpolations)
 }
 \examples{
 s1 <- tibble(l=c(1,3,5,6,9),

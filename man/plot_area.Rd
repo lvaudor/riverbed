@@ -4,8 +4,7 @@
 \alias{plot_area}
 \title{A function to plot the area between two profiles}
 \usage{
-plot_area(result_area, distinguish_type = TRUE,
-  show_uncertainty = FALSE)
+plot_area(result_area, distinguish_type = TRUE, show_uncertainty = FALSE)
 }
 \arguments{
 \item{distinguish_type}{whether or not to distinguish between upper area and lower area}

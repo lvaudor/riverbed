@@ -3,4 +3,5 @@
 export(area_between)
 export(cross_series)
 export(plot_area)
+export(project_on_AB)
 export(project_on_transect)

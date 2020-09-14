@@ -14,6 +14,7 @@ devtools::install_github("lvaudor/riverbed",build_vignette=TRUE)
 ## Guidelines
 
 To have a general overview of the use of this package please see vignette:
+
 ```{r}
 vignette("riverbed")
 ```

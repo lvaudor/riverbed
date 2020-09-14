@@ -4,8 +4,7 @@
 \alias{area_between}
 \title{A function to calculate area between two profiles}
 \usage{
-area_between(s1, s2 = NA, h = NA, sigma_z = c(NA, NA),
-  sigma_l = c(NA, NA))
+area_between(s1, s2 = NA, h = NA, sigma_z = c(NA, NA), sigma_l = c(NA, NA))
 }
 \arguments{
 \item{s1}{tibble with columns l and z describing first profile}

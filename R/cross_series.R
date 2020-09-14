@@ -1,12 +1,9 @@
-#' A function to calculate area between two profiles
+#' This function crosses two (l,z) series and provides a tibble regarding all points of interest (observations, intersections, interpolations)
 #'
-#' This function takes two profiles defined as (l1,z1) and (l2,z2) as inputs and calculates area between them
 #' @param s1 tibble with columns l and z describing first profile
 #' @param s2 tibble with columns l and z describing second profile
 #' @param h if provided by user, the second profile is supposed to be horizontal, with constant height=h (defaults to NA)
-#' @return area
-#' @return area_by_type
-#' @return data
+#' @return a tibble providing info on all points of interest in the crossing of the two series.
 #' @export
 #' @examples
 #' s1 <- tibble(l=c(1,3,5,6,9),

@@ -25,15 +25,15 @@ slopexy slope of transect
 interceptxy intercept of transect
 }
 \description{
-This function takes two profiles defined as (x1,y1) and (x2,y2) as inputs and calculates area between them
+A function to project data on a bestfitting transect line
 }
 \examples{
 x=c(-73.1,-57.4,-54.6,-32.4,-13.9,  9.9, 46.8, 59.3, 91.8, 47.3)
 y=c(-73.8,-57.6,-23.5,-20.6,-22.1,-41.9,-49.7,-26.3,-5.75,-34.1)
 res=project_on_transect(x,y)
-plot(x,y,col=mycol,
-     xlim=range(c(x,res$x)),
-     ylim=range(c(y,res$y)))
+plot(x,y,col="blue",
+     xlim=range(c(x,res$xt)),
+     ylim=range(c(y,res$yt)))
 abline(b=res$slopexy,a=res$interceptxy, col="red")
-points(res$x,res$y, col="red")
+points(res$xp,res$yp, col="red")
 }
