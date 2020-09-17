@@ -17,7 +17,7 @@
 #' s2 <- tibble(l=c(0.5,2.5,4,6,8),
 #'              z=c(3,1,2,4,3))
 #' area_between(s1,s2)
-#' area_between(s1,h=2)
+#' area_between(s1,h=-5)
 area_between=function(s1,
                       s2=NA,
                       h=NA,
@@ -31,6 +31,7 @@ area_between=function(s1,
     mutate(La=L,
            Lb=lead(L,1)) %>%
     mutate(a=w*(La+Lb)/2) %>%
+    mutate(type="") %>%
     mutate(type=case_when(a>0~"upper",
                           a<0~"lower")) %>%
     arrange(l) %>%

@@ -77,6 +77,7 @@ cross_series=function(s1,
            l_obs=NA,
            z_obs=NA,
            series=NA) %>%
+    mutate(series=as.character(series)) %>%
     select(-cross,-x,-y)
   dat=bind_rows(dat,dat_intersect) %>%
     arrange(l)
