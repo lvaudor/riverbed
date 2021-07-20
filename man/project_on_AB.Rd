@@ -7,9 +7,11 @@
 project_on_AB(dat, datAB, datOg = datAB[1, ])
 }
 \arguments{
-\item{x}{x coordinate of points}
+\item{dat}{tibble with coordinates columns x and y}
 
-\item{y}{y coordinate of points}
+\item{datAB}{tibble with two rows (points A and B) and coordinates columns x and y}
+
+\item{datOg}{point that defines the origin (point with l=0) of the series}
 }
 \value{
 xp x coordinate of points projected on the transect
@@ -24,10 +26,10 @@ yt y coordinate corresponding to the distance to the transect (new coordinate y)
 A function to project data on a line defined by two points A & B
 }
 \examples{
-dat=tibble(x=c(3.3,5.2,1.6,6.3),
-           y=c(2.1,6.3,2.1,1.6))
-datAB=tibble(x=c(0.2,4.2),
-             y=c(2.6,6.6))
+dat=tibble(x=c(866142.3, 866149.9, 866143.7),
+           y=c(84496.97, 84496.93, 84498.50))
+datAB=tibble(x=c(866141.3,866148.7),
+             y=c(84498.97, 84496.50))
 dat=project_on_AB(dat,datAB)
 ggplot(dat,  aes(x=x,y=y))+
   geom_point(col="red")+

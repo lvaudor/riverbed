@@ -20,10 +20,8 @@ a tibble providing info on all points of interest in the crossing of the two ser
 This function crosses two (l,z) series and provides a tibble regarding all points of interest (observations, intersections, interpolations)
 }
 \examples{
-s1 <- tibble(l=c(1,3,5,6,9),
-             z=c(1,2,3,2.5,5))
-s2 <- tibble(l=c(0.5,2.5,4,6,8),
-             z=c(3,1,2,4,3))
+data(s1)
+data(s2)
 cross_series(s1,s2)
 cross_series(s1,h=2)
 }

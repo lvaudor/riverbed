@@ -1,0 +1,178 @@
+---
+title: "Using riverbed with multiple channels"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{multiple_channels}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = TRUE, message=FALSE, warning=FALSE
+)
+```
+
+```{r setup}
+library(riverbed)
+library(dplyr)
+library(ggplot2)
+```
+
+# Load example datasets
+
+
+Use two transects s1 and s2 **already included as example datasets** in the package. They correspond to the same place, at two different times.
+
+```{r data_load}
+data(s1)
+data(s2)
+```
+
+You can  compare those two transects and assess the overall change between them through a simple call to `area_between()`. 
+
+```{r simple_channel_calc}
+result_area=area_between(s1,s2)
+result_area
+plot_area(result_area)
+```
+
+# Identify channels with get_channels()
+
+On the other hand, these transects might correspond to a multi-channel riverbed, in which case you might want to assess the changes of each channel individually. It is then necessary to first **identify channels**.
+
+
+```{r identify_channels1, fig.width=6,fig.height=3}
+channels1=get_channels(s1, hmin=1, hmax=5.5)
+channels1
+plot_channels(channels1,sr=s1)
+```
+
+- i_a and i_b: indices of observations delimiting the channel,
+- l_a and l_b: longitudinal coordinates of points delimiting the channel
+- z_a and z_b: height of points delimiting the channel
+- z_min and z_max: minimum and maximum height of the channel-delimited profile
+
+The type of channel returned can be either
+
+- "bankfull" (the default, as above)
+- "levee-to-levee" (see example below), which is delimited on both sides by local maxima
+
+Here is what you would get with type="levee-to-levee":
+
+```{r identify_channels1_levee_to_levee, fig.width=6,fig.height=3}
+channels1=get_channels(s1, hmin=1, hmax=5.5, type="levee-to-levee")
+channels1
+plot_channels(channels1,sr=s1)
+```
+
+# Effect of parameters hmin and hmax
+
+**Parameters hmin and hmax**
+
+**Local minima** must be at $z<z_{min}+h_{max}$ to define a channel's bottom.
+
+**Local maxima** must be at $z>z_{localmin}+h_{min}$ to define a channel's banks.
+
+Hence $hmin$ corresponds to the minimum water depth in a channel, and $hmax$ corresponds to the maximum height of a channel's bottom.
+
+See the effect of these parameters:
+
+```{r test2, fig.width=6,fig.height=3}
+channels1=get_channels(s1, hmin=0.5, hmax=4)
+plot_channels(channels1,sr=s1)
+```
+
+```{r test3, fig.width=6,fig.height=3}
+channels1=get_channels(s1, hmin=3, hmax=5)
+plot_channels(channels1,sr=s1)
+```
+# Regroup channels through dates
+
+Here, with the same values $h_{min}$ and $h_{max}$, we get **3 distinct channels at both dates**:
+
+```{r two_channels, fig.width=6, fig.height=3}
+channels1=get_channels(s1,hmin=1,hmax=5.5)
+plot_channels(channels1,sr=s1)
+channels2=get_channels(s2,hmin=1,hmax=5.5)
+plot_channels(channels2,sr=s2)
+```
+
+... But these correspond to different $l$ coordinates.
+
+So, we have to somehow **"regroup" these coordinates** to be able to compare the transects with **channel-wise area calculations**.
+
+# Example of channel-wise area calculation through two dates
+
+
+## get_channels()
+
+Let's apply the `get_channels()` function to all transects (the column identifying those being called "id_transect").
+
+```{r gather_transects}
+transects=bind_rows(bind_cols(id_transect="s1",s1),
+                    bind_cols(id_transect="s2",s2))%>% 
+  group_by(id_transect) %>% 
+  tidyr::nest()
+```
+
+The table `transects` gathers the data of both transects s1 and s2. Let's apply `get_channels()` iteratively to each transect:
+
+```{r get_all_channels}
+channels =transects %>%  
+  mutate(data=purrr::map(data,get_channels, hmin=1, hmax=4.5)) %>% 
+  tidyr::unnest(cols=data) 
+channels
+```
+## regroup_channels()
+
+Both transects correspond to **3 channels** with identifier `id_c` (1,2,3).
+
+We regroup these channels with function `regroup_channels()`, which returns for each channel longitudinal limits `l_a` and `l_b`. These limits include the total width of both channels.
+
+```{r regroup_channels, fig.width=6, fig.height=3}
+regrouped_channels=regroup_channels(channels,by_id=id_c)
+regrouped_channels
+plot_channels(channels1, s1)+
+  geom_vline(data=regrouped_channels, aes(xintercept=l_a), col="grey")+
+  geom_vline(data=regrouped_channels, aes(xintercept=l_b), col="grey")
+plot_channels(channels2, s2)+
+  geom_vline(data=regrouped_channels, aes(xintercept=l_a), col="grey")+
+  geom_vline(data=regrouped_channels, aes(xintercept=l_b), col="grey")
+```
+## area_between()
+
+```{r calc_areas_result}
+areas_result=transects %>%
+  mutate(subdata=purrr::map(data,cut_series,
+                            channels=regrouped_channels)) %>% 
+  tidyr::unnest(cols=subdata) %>% 
+  tidyr::pivot_wider(id_cols=id_c, names_from=id_transect,values_from=sr) %>%
+  mutate(area_complete=purrr::map2(s1,s2,area_between))
+areas_result
+```
+
+## format result
+
+```{r format_areas_result}
+areas_formatted_result= areas_result%>%
+  mutate(area=purrr::map_dbl(area_complete,~.x$area)) %>% 
+  mutate(area_lower=purrr::map_dbl(area_complete,
+                                   ~.x$area_by_type %>%
+                                     filter(type=="lower") %>% pull(area))) %>% 
+  mutate(area_upper=purrr::map_dbl(area_complete,
+                                   ~.x$area_by_type %>% 
+                                     filter(type=="upper") %>% pull(area))) %>% 
+  mutate(plot=purrr::map(area_complete,plot_area)) %>% 
+  select(id_c,area,area_lower,area_upper,plot)
+areas_formatted_result
+```
+
+```{r plot_areas, fig.width=3, fig.height=3}
+areas_formatted_result$plot
+```
+
+
+

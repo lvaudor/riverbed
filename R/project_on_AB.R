@@ -2,6 +2,7 @@
 #'
 #' @param dat tibble with coordinates columns x and y
 #' @param datAB tibble with two rows (points A and B) and coordinates columns x and y
+#' @param datOg point that defines the origin (point with l=0) of the series
 #' @return xp x coordinate of points projected on the transect
 #' @return yp y coordinate of points projected on the transect
 #' @return xt x coordinate along the transect (new coordinate x)

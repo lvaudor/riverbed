@@ -2,6 +2,12 @@
 
 export(area_between)
 export(cross_series)
+export(cut_series)
+export(get_channels)
+export(get_sections)
+export(local_extrema)
 export(plot_area)
+export(plot_channels)
 export(project_on_AB)
 export(project_on_transect)
+export(regroup_channels)

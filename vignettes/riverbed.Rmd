@@ -17,13 +17,15 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(riverbed)
+library(dplyr)
+library(ggplot2)
 ```
 
-```{r data_create}
-s1 <- tibble(l=c(1.1,3.4,5.0,5.3,6.2,4.3,2.5,6.7,6.9,9.2),
-             z=c(1.4,3.1,5.5,4.8,1.3,2.5,4.3,2.2,3.1,2.6))
-s2 <- tibble(l=c(0.5,2.5,4.0,6.0,4.4,5.8,9.5,7.2),
-             z=c(2.8,1.5,2.2,4.3,5.5,2.2,1.5,5.3))
+# Example datasets
+
+```{r data_load}
+data(s1)
+data(s2)
 ```
 
 We consider two longitudinal series $s_1=(l_1,z_1)$, and $s_2=(l_2,z_2)$:
@@ -36,6 +38,8 @@ ggplot(filter(result_area$data, !is.na(series)),
   geom_line()+
   geom_point()
 ```
+
+# Principle of the area calculation
 
 To calculate the area between the curves we need to interpolate the data and calculate intersects between the two curves:
 
@@ -57,6 +61,8 @@ ggplot(result_area$data,
              aes(x=l,y=z1), col="dark blue",shape=0)
 ```
 
+# Use of area_between()
+
 This, as well as the calculation of corresponding trapezia, is realised by the function `area_between()`.
 
 ```{r result_area}
@@ -73,10 +79,10 @@ The output of the function corresponds to
 Note that it is also possible to calculate the area between one longitudinal series $s_1=(l_1,z_1)$ and a constant horizontal value $h$.
 
 ```{r result_area_h}
-result_area_h <- area_between(s1,h=2)
+result_area_h <- area_between(s1,h=225)
 ```
 
-## Plot of area
+# Plot of area
 
 ```{r plot_area, fig.width=5, fig.height=3}
 plot_area(result_area)
@@ -93,64 +99,3 @@ The plotting function `plot_area()` can also be used with just **one series** an
 ```{r plot_area_h, fig.width=5, fig.height=3}
 plot_area(result_area_h)
 ```
-
-# Error in the calculation of area
-
-Now suppose that the series $s_1$ and $s_2$ are measured with a certain level of uncertainty, due to 
-
-- imprecision in the measure of height $z$ ($\sigma_z$) and/or 
-- imprecision in the measure of longitudinal coordinate $l$ ($\sigma_l$). 
-
-These imprecisions might be different for the two series (change in sampling protocol, improvement in sampling gear between two dates, etc.).
-
-
-The **uncertainty in measures** results in a certain amount of **uncertainty in the estimate of area** between the two curves. This is provided by the function `area_uncertainty()`.
-
-Here, with errors in the measures of height (0.1 and 0.3) higher than in the measures of longitudinal coordinates (0.05 and 0.2), and errors more important for series $s_2$ (0.3 and 0.2) than for $s_2$ (0.1 and 0.05).
-
-```{r result_area_with_errors}
-result_area <- area_between(s1,s2,
-                            sigma_z=c(0.1,0.3),
-                            sigma_l=c(0.05,0.2))
-```
-
-The `plot_area()` function can provide a visual hint of the uncertainties in $l$ and $z$ measures with horizontal and vertical error bars:
-
-```{r show_uncertainty, fig.width=5,fig.height=3}
-plot_area(result_area, show_uncertainty=TRUE)
-```
-
-```{r estimates_and_confidence_interval, echo=FALSE}
-A_est <- result_area$area
-sigma_area <- round(result_area$sigma_area,2)
-A_liminf <- round(A_est-1.96*A_est,2)
-A_limsup <- round(A_est+1.96*A_est,2)
-```
-
-Here, for instance, 
-
-- The estimate of area is `r round(A_est,2)`.
-- The uncertainty in measures results in an error in the estimate of area of $\sigma_{area}$=`r sigma_area`. Hence we have a 95% confidence interval for the estimate of area of $[A-1.96\cdot\sigma_{area}, A+1.96\cdot\sigma_{area}]$=[`r A_liminf`,`r A_limsup`].
-
-We can check the calculation of error through a simple simulation with 1000 series $s_{1tmp}$ and $s_{2tmp}$ varying around $s_1$ and $s_2$ respectively, with variations corresponding to estimation errors $\sigma_z$ and $\sigma_l$:
-
-```{r simulate}
-set.seed(33)
-sigma_z=c(0.1,0.3)
-sigma_l=c(0.05,0.2)
-f=function(i){
-  s1_tmp <- tibble(l=s1$l+rnorm(nrow(s1),0,sigma_l[1]),
-                   z=s1$z+rnorm(nrow(s1),0,sigma_z[1]))
-  s2_tmp <- tibble(l=s2$l+rnorm(nrow(s2),0,sigma_l[2]),
-                   z=s2$z+rnorm(nrow(s2),0,sigma_z[2]))
-  return(area_between(s1_tmp,s2_tmp)$area)
-}
-area_vals=purrr::map_dbl(1:1000,f)
-sd(area_vals)
-
-res=area_between(s1,s2,
-                 sigma_z=sigma_z, sigma_l=sigma_l)
-res$sigma_area
-```
-
-

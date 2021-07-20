@@ -7,11 +7,11 @@
 plot_area(result_area, distinguish_type = TRUE, show_uncertainty = FALSE)
 }
 \arguments{
+\item{result_area}{the result of function area_between() or area_uncertainty()}
+
 \item{distinguish_type}{whether or not to distinguish between upper area and lower area}
 
 \item{show_uncertainty}{whether or not to show the sources of error}
-
-\item{area_data}{the result of function area_between() or area_uncertainty()}
 }
 \value{
 a plot showing the area difference between series
@@ -20,10 +20,8 @@ a plot showing the area difference between series
 This function takes as input the result of function area_between()
 }
 \examples{
-l1=c(1,3,5,6,9)
-z1=c(1,2,3,2.5,5)
-l2=c(0.5,2.5,4,6,8)
-z2=c(3,1,2,4,3)
-result_area <- area_between(l1,z1,l2,z1)
-plot_area(result_area)
+s1=tibble::tibble(l=c(1,3,5,6,9),z=c(1,2,3,2.5,5))
+s2=tibble::tibble(l=c(0.5,2.5,4,6,8),z=c(3,1,2,4,3))
+result_area <- area_between(s1,s2,sigma_z=c(0.2,0.5),sigma_l=c(0.25,0.25))
+plot_area(result_area, show_uncertainty=TRUE)
 }

@@ -30,10 +30,8 @@ data
 This function takes two profiles defined as (l1,z1) and (l2,z2) as inputs and calculates area between them
 }
 \examples{
-s1 <- tibble(l=c(1,3,5,6,9),
-             z=c(1,2,3,2.5,5))
-s2 <- tibble(l=c(0.5,2.5,4,6,8),
-             z=c(3,1,2,4,3))
+data(s1)
+data(s2)
 area_between(s1,s2)
-area_between(s1,h=2)
+area_between(s1,h=-5)
 }
