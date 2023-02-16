@@ -55,7 +55,7 @@ calc_var=function(dat,index,sigma_z,sigma_l){
 #' area_between(s1,s2)
 #' area_between(s1,h=-5)
 area_between=function(s1,
-                      s2=NA,
+                      s2=NULL,
                       h=NA,
                       sigma_z=c(NA,NA),
                       sigma_l=c(NA,NA)){
@@ -77,7 +77,7 @@ area_between=function(s1,
     datc <- dat %>%
       dplyr::filter(p=="intersect") %>%
       dplyr::mutate(type=dplyr::case_when(type=="upper"~"lower",
-                                   type=="lower"~"upper") %>%
+                                          type=="lower"~"upper") %>%
                       factor(levels=c("upper","lower")),
                     a=NA,
                     order=1)
@@ -113,9 +113,17 @@ area_between=function(s1,
                                          series=="s2"~l-sigma_l[2]),
                   lmax= dplyr::case_when(series=="s1"~l+sigma_l[1],
                                          series=="s2"~l+sigma_l[2]))
-
+  # width on which the comparison is done:
+  if(is.null(s2)){width=diff(range(s1$l))}
+  if(!is.null(s2)){
+    minl=max(c(min(s1$l),min(s2$l)))
+    maxl=min(c(max(s1$l),max(s2$l)))
+    width=maxl-minl
+  }
+  # result
   return(list(data=dat,
               area=area,
               area_by_type=area_by_type,
-              sigma_area=sigma_area))
+              sigma_area=sigma_area,
+              width=width))
 }
